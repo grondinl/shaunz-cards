@@ -1,7 +1,7 @@
 FROM python:3.10-alpine
 
-RUN pip install requests click
+RUN pip install flask requests prometheus_client
 
-COPY cards.py . 
+COPY app.py . 
 
-CMD ["python3", "cards.py"]
+CMD ["uwsgi", "app.py"]
