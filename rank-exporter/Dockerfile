@@ -1,7 +1,13 @@
 FROM python:3.10-alpine
 
-RUN pip install flask requests prometheus_client uwsgi
+RUN apk add linux-headers build-base && \
+    pip install flask requests prometheus_client uwsgi
 
-COPY app.py . 
+COPY main.py . 
 
-CMD ["uwsgi", "app.py"]
+ENTRYPOINT [ "uwsgi" ]
+
+CMD ["--http", "0.0.0.0:8000", \
+    "--wsgi-file", "main.py", \
+    "--callable", "app"]
+

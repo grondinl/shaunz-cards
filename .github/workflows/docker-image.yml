@@ -31,7 +31,7 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
 
-    - name: Build the shaunz-cards-${{ matrix.docker_context }} Docker image
+    - name: Build the shaunz-cards-${{ matrix.component }} Docker image
       uses: docker/build-push-action@v2
       with: 
         context: ${{ matrix.component }}
