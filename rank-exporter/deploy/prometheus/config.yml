@@ -12,3 +12,8 @@ data:
       static_configs:
         - targets: ['localhost:9090']
 
+    - job_name: 'rank-exporter'
+      scrape_timeout: 2m
+      static_configs:
+        - targets: ['rank-exporter:8000']
+

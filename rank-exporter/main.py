@@ -3,6 +3,7 @@ from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from prometheus_client import make_wsgi_app
 from prometheus_client.core import GaugeMetricFamily, REGISTRY
 from requests import post
+from time import sleep
 
 
 class CustomCollector(object):
@@ -15,6 +16,7 @@ class CustomCollector(object):
         res = post('https://api.cards.shaunz.fr/classement')
         classement = res.json()["classement"]
         for rank in classement: 
+            sleep(0.1)
             cards_by_tier = post('https://api.cards.shaunz.fr/joueur', data={'userId': rank['id']}).json()['nbCardsByTier']
             metrics['points_gauge'].add_metric([rank['name']], rank['score'])
             metrics['count_gauge'].add_metric([rank['name']], rank['cards'])

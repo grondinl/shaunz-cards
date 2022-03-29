@@ -2,10 +2,18 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: grafana
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: kong
+  tls: # < placing a host in the TLS config will determine what ends up in the cert's subjectAltNames
+  - hosts:
+    - grafana.famtom.fr
+    secretName: myingress-cert
   rules:
-  - http:
+  - host: grafana.famtom.fr
+    http:
       paths:
       - path: /
         pathType: ImplementationSpecific
