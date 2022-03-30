@@ -13,6 +13,7 @@ class CustomCollector(object):
             'count_gauge' : GaugeMetricFamily('papichoulo_cards_count','', labels=['name']),
             'count_gauge_by_tier' : GaugeMetricFamily('papichoulo_cards_count_by_tier','', labels=['name', 'tier']),
             'shiny_count_gauge' : GaugeMetricFamily('papichoulo_shiny_count','', labels=['name', 'tier']),
+            'trophees' : GaugeMetricFamily('papichoulo_trophee','', labels=['name', 'type']),
         }
         res = post('https://api.cards.shaunz.fr/classement')
         classement = res.json()['classement']
@@ -31,7 +32,10 @@ class CustomCollector(object):
             for trophee in joueur['trophees']:
                 if trophee['name'] == 'shinny':
                     has_shiny = trophee['value']
-
+                    continue
+                value = 1 if trophee['value'] else 0
+                metrics['trophees'].add_metric([name,trophee['name']], value)
+                
             if has_shiny:
                 shiny_count_by_tier = {'1':0,'2':0,'3':0,'4':0,'5':0}
                 for card in list_cards:
