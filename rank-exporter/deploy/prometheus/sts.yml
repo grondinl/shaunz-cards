@@ -45,6 +45,9 @@ spec:
           limits:
             memory: "256Mi"
             cpu: "500m"
+          requests:
+            memory: "100Mi"
+            cpu: "100m"
         volumeMounts:
         - name: data
           mountPath: /prometheus
