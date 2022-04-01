@@ -48,8 +48,8 @@ def main(access_token, user_id, base_api_url):
     data = {'accessToken': access_token, 'userId' : user_id}
     login_resp = login(base_api_url, data)
     tokens = login_resp['tokens']
-    tokens_list = list(tokens.keys())
-    for token_key in reversed(tokens_list):
+    tokens_list = ['6','1','2','3','4','5']
+    for token_key in tokens_list:
         token_count = tokens[token_key] 
         for i in range(0,token_count):
             if token_key == '6':
@@ -57,11 +57,10 @@ def main(access_token, user_id, base_api_url):
                 if i == token_count - 1:
                     tokens = login(base_api_url, data)
                 continue
-            if token_key == '2' or token_key == '3':
+            if token_key == '2' or token_key == '3' or login_resp['hasAllCardsByTier'][token_key]:
                 trade_token(base_api_url, data, token_key)
                 continue
-            if login_resp['hasAllCardsByTier'][token_key] == False:
-                get_cards(base_api_url, data, token_key)
+            get_cards(base_api_url, data, token_key)
 
 if __name__ == '__main__':
     main()
