@@ -15,7 +15,7 @@ def login(base_api_url, data):
         print('Logging failed')
         return {}
     print('Logged as {}'.format(resp.json()['name']))
-    return resp.json()['tokens']
+    return resp.json()
 
 def get_cards(base_api_url, data, card_token):
     print('Get card with token {}'.format(card_token), end=' ')
