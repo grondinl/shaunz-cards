@@ -1,3 +1,4 @@
+from gc import callbacks
 from requests import post
 from json import dumps
 import click
@@ -40,11 +41,24 @@ def gamble_pack(base_api_url, data):
         print('failed : {}'.format(resp.text))
     print('success')
 
+def validate_token_to_trade(ctx, param, value):
+    if isinstance(value, list):
+        return value
+    try:
+        tokens = value.split(",")
+        for token in tokens:
+            if int(token) < 0 or  int(token) > 5:
+                raise ValueError
+        return tokens
+    except ValueError:
+        raise click.BadParameter("format must be number between 1 to 5 comma separated")
+
 @click.command()
 @click.option('--access-token', required=True, envvar='ACCESS_TOKEN')
 @click.option('--user-id', required=True, envvar='USER_ID')
 @click.option('--base-api-url', default='https://api.cards.shaunz.fr')
-def main(access_token, user_id, base_api_url):
+@click.option('--token-to-trade', envvar='TOKEN_TO_TRADE', default='2,3', callback=validate_token_to_trade)
+def main(access_token, user_id, base_api_url, token_to_trade):
     data = {'accessToken': access_token, 'userId' : user_id}
     login_resp = login(base_api_url, data)
     tokens = login_resp['tokens']
@@ -57,11 +71,10 @@ def main(access_token, user_id, base_api_url):
                 if i == token_count - 1:
                     tokens = login(base_api_url, data)
                 continue
-            if token_key == '2' or token_key == '3':
+            if token_key in token_to_trade or login_resp['hasAllCardsByTier'][token_key]:
                 trade_token(base_api_url, data, token_key)
                 continue
-            if login_resp['hasAllCardsByTier'][token_key] == False:
-                get_cards(base_api_url, data, token_key)
+            get_cards(base_api_url, data, token_key)
 
 if __name__ == '__main__':
     main()

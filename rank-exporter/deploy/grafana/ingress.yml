@@ -4,15 +4,17 @@ metadata:
   name: grafana
   annotations:
     kubernetes.io/tls-acme: "true"
+    konghq.com/protocols: https
+    konghq.com/https-redirect-status-code: "308"
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: kong
   tls: # < placing a host in the TLS config will determine what ends up in the cert's subjectAltNames
   - hosts:
-    - grafana.famtom.fr
+    - grafana.famtom.fr	
     secretName: myingress-cert
   rules:
-  - host: grafana.famtom.fr
+  - host: grafana.famtom.fr	
     http:
       paths:
       - path: /
