@@ -69,19 +69,16 @@ def main(access_token, user_id, base_api_url, token_to_trade):
     data = {'accessToken': access_token, 'userId' : user_id}
     login_resp = login(base_api_url, data)
     tokens = login_resp['tokens']
-    tokens_list = list(tokens.keys())
-    for token_key in reversed(tokens_list):
+    tokens_list = ['6','1','2','3','4','5',]
+    for token_key in tokens_list:
         token_count = tokens[token_key] 
-        for i in range(0,token_count):
-            if token_key == '6':
-                gamble_pack(base_api_url, data)
-                if i == token_count - 1:
-                    tokens = login(base_api_url, data)
-                continue
-            if token_key in token_to_trade or login_resp['hasAllCardsByTier'][token_key]:
-                trade_token(base_api_url, data, token_key)
-                continue
-            get_cards(base_api_url, data, token_key)
+        if token_key == '6':
+            login_resp = multi_gamble_pack(base_api_url, data, token_count)
+            continue
+        if token_key in token_to_trade or login_resp['hasAllCardsByTier'][token_key]:
+            multi_trade_token(base_api_url, data, token_key, token_count)
+            continue
+        multi_get_cards(base_api_url, data, token_key, token_count)
 
 if __name__ == '__main__':
     main()
